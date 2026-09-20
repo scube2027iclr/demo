@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="S³ — Explore joint lyrics–melody transcription and reference-conditioned singing. Listen, follow the notes, and discover a different performance of the same song.">
+  <meta name="theme-color" content="#f7f7f2">
+  <title>S³ — The same song. A new expression.</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Skip to listening room</a>
+  <header class="site-header wrap">
+    <a class="brand" href="#svc" aria-label="S cubed, home"><span class="brand-mark">S<sup>3</sup></span><span class="brand-caption">A NEW EXPRESSION</span></a>
+    <nav class="top-nav" aria-label="Main navigation"><button data-tab="svc" class="nav-tab active" aria-current="page">Singing conversion</button><button data-tab="applications" class="nav-tab">Applications <span class="nav-arrow">↗</span></button></nav>
+    <span class="header-note"><span class="status-dot"></span> Research listening room</span>
+  </header>
+
+  <main id="svc-page" class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <div><p class="eyebrow"><span class="tiny-line"></span> STRUCTURE TO SOUND, WITH STYLE</p><h1 id="hero-title">The same song.<br>A <em>new expression.</em></h1><p class="hero-description">Keep the melody. Follow the lyrics. Let another voice<br class="desktop-break"> bring the performance to life.</p></div>
+      <div class="hero-aside" aria-label="The S3 pipeline"><div class="pipeline-word"><span>01</span> Listen <i>↗</i></div><div class="pipeline-word"><span>02</span> Transcribe <i>↗</i></div><div class="pipeline-word"><span>03</span> Reinterpret <i>↗</i></div><p>One symbolic score.<br>Room for a different performance.</p></div>
+    </section>
+
+    <section id="workspace" class="listening-room" aria-label="Interactive singing conversion demo">
+      <div class="room-heading"><div class="section-heading"><span class="index-label">01 / LISTEN & EXPLORE</span><h2 id="song-title">Loading the collection…</h2><p id="song-subtitle"></p></div><div class="song-actions"><label class="select-wrap"><span class="sr-only">Choose a song</span><select id="song-select" aria-label="Choose a song"></select></label><button id="shuffle" class="btn btn-outline"><span data-icon="shuffle"></span> Surprise me</button><button id="share" class="icon-button" aria-label="Copy a link to this song and reference" title="Copy case link"><span data-icon="link"></span></button></div></div>
+
+      <div class="studio">
+        <aside class="reference-panel" aria-label="Reference performance"><div class="label-row"><span class="eyebrow">THE REFERENCE</span><span id="reference-count" class="soft-number"></span></div><h3>A voice to<br><em>reimagine it.</em></h3><p class="subtle">Choose a reference performance.</p><div id="reference-list" class="reference-list"></div><div class="reference-player"><div class="reference-art" aria-hidden="true"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit orbit-three"></span><span class="orbit-core"></span><span class="art-label">VOICE / EXPRESSION</span></div><button id="reference-play" class="reference-play"><span class="round-play" data-icon="play"></span><span><strong>Listen to reference</strong><small id="reference-time">Original reference audio</small></span></button><input id="reference-seek" class="thin-range" type="range" min="0" max="100" value="0" step="0.01" aria-label="Seek reference audio"></div><p id="reference-description" class="reference-description"></p><div class="reference-bottom"><span class="small-square"></span> Reference-conditioned generation</div></aside>
+
+        <div class="performance-panel"><div class="performance-top"><div><span class="eyebrow">THE PERFORMANCE</span><div class="mode-switch" role="group" aria-label="Playback source"><button data-mode="ours" class="selected">S³ <span>Generated</span></button><button data-mode="source">Source <span>Vocals</span></button><button data-mode="mix">Original <span>Mix</span></button></div></div><div class="score-badge"><span class="status-dot"></span> Predicted symbolic score</div></div>
+
+          <div class="transport"><button id="main-play" class="play-main" aria-label="Play performance"><span data-icon="play"></span></button><div class="transport-body"><div class="track-caption"><span id="track-name">S³ · Generated performance</span><span class="time-code"><span id="current-time">0:00</span><span class="slash"> / </span><span id="duration">0:00</span></span></div><div class="waveform-wrap"><canvas id="waveform" aria-hidden="true"></canvas><input id="seek" type="range" value="0" min="0" max="34" step="0.01" aria-label="Seek performance"></div></div><button id="restart" class="icon-button" aria-label="Restart performance" title="Restart"><span data-icon="restart"></span></button></div>
+
+          <div class="score-toolbar"><div class="score-tabs"><span class="score-tab active"><span data-icon="piano"></span> Piano roll</span><span class="score-tab unavailable" title="Score view will be added with beat-aligned notation data">Score <small>soon</small></span></div><div class="score-controls"><label class="check-control"><input id="pinyin" type="checkbox" checked><span>Pronunciation</span></label><button id="zoom-out" class="icon-button small" aria-label="Zoom out" title="Zoom out"><span data-icon="minus"></span></button><span id="zoom-label" class="zoom-label">12s</span><button id="zoom-in" class="icon-button small" aria-label="Zoom in" title="Zoom in"><span data-icon="plus"></span></button></div></div>
+
+          <div class="piano-surface"><canvas id="piano-roll" tabindex="0" role="img" aria-label="Interactive piano roll. Notes sharing a syllable are connected. Use lyric buttons below to select groups; left and right arrows move through notes."></canvas><div id="note-tooltip" class="note-tooltip" hidden></div></div>
+          <div class="score-foot"><span><i class="legend-note"></i> One syllable <i class="legend-melisma"></i> Melisma · one syllable, multiple notes</span><span id="note-count"></span></div>
+          <div class="overview-wrap"><canvas id="overview" aria-hidden="true"></canvas><input id="pan" type="range" min="0" max="22" value="0" step="0.05" aria-label="Pan the piano roll"></div>
+
+          <div class="playback-tools"><div class="midi-controls"><button id="midi-toggle" class="switch-button" role="switch" aria-checked="false"><span class="switch-track"></span> MIDI overlay</button><input id="midi-volume" type="range" min="0" max="0.6" step="0.01" value="0.18" aria-label="MIDI overlay volume" title="MIDI volume"><button id="midi-only" class="text-button" aria-pressed="false">MIDI only</button></div><div class="secondary-tools"><button id="loop" class="text-button" aria-pressed="false"><span data-icon="repeat"></span><span>Loop phrase</span></button><button id="follow" class="text-button on" aria-pressed="true"><span data-icon="follow"></span> Follow</button></div></div>
+        </div>
+      </div>
+
+      <div class="lyrics-section"><div class="lyrics-heading"><div><span class="eyebrow">FOLLOW THE WORDS</span><h3>Every word, <em>connected.</em></h3></div><p>Click a syllable to find its notes.<br><span class="copper-text">Underlined words unfold across multiple notes.</span></p></div><div id="lyric-lines" class="lyric-lines"></div><div class="score-disclaimer"><span data-icon="info"></span> The playhead follows the predicted score timeline. Expressive timing in the audio may differ.<a id="midi-download" download>Download MIDI <span>↗</span></a></div></div>
+    </section>
+
+    <section class="comparison-section" aria-labelledby="comparison-title"><div class="section-topline"><div><p class="index-label">02 / SIDE BY SIDE</p><h2 id="comparison-title">Hear the <em>difference.</em></h2></div><p>Same source. Same reference.<br>A different approach to singing conversion.</p></div><div id="baselines" class="baseline-grid"></div></section>
+    <section class="method-note"><span class="brand-mark small-brand">S<sup>3</sup></span><div><h3>Structure is the starting point.</h3><p>Joint lyrics–melody transcription recovers the notes and their lyric assignments. A reference-conditioned generator turns that symbolic score into a new singing performance.</p></div><div class="method-chips"><span>Note-level melody</span><span>Lyric assignment</span><span>Reference expression</span></div></section>
+  </main>
+
+  <main id="applications-page" class="wrap" hidden><section class="hero applications-hero"><div><p class="eyebrow"><span class="tiny-line"></span> BEYOND VOICE CONVERSION</p><h1>A song is only<br><em>the beginning.</em></h1><p class="hero-description">New words. A different melody. The same expressive voice.<br class="desktop-break"> Explore what an editable symbolic score makes possible.</p></div><div class="application-symbol" aria-hidden="true">a <span>↔</span> ♩</div></section><section id="application-cases" class="application-cases" aria-label="Creative editing examples"></section></main>
+
+  <footer class="wrap site-footer"><span class="footer-brand">S<sup>3</sup> <span>Symbolic structure. Expressive singing.</span></span><span>Anonymous research demo · ICLR 2027</span><a href="#svc" class="back-top">Back to the music ↑</a></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <audio id="main-audio" preload="metadata"></audio><audio id="reference-audio" preload="metadata"></audio><audio id="aux-audio" preload="none"></audio>
+  <noscript><p class="noscript">Please enable JavaScript to explore the audio examples and piano roll.</p></noscript>
+</body>
+</html>
