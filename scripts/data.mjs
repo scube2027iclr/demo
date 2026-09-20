@@ -103,10 +103,10 @@ export function buildLibrary(demoDir, applicationsDir) {
         const file = audioIn(bd, name) || audioIn(bd, 'output') || audioIn(bd, 'audio') || fs.readdirSync(bd).filter(f => audioExtensions.includes(path.extname(f).toLowerCase())).map(f=>path.join(bd,f))[0];
         return file ? [{ id: name, name: bm.title || name.replace(/[-_]/g, ' '), description: bm.description || '', audio: media(file, bm.audioOffset || 0) }] : [];
       });
-      references.push({ id: refId, title: refMeta.title || (/^referencename\d+$/i.test(refId) ? `Reference ${references.length+1}` : refId.replace(/[-_]/g, ' ')), description: refMeta.description || 'Listen to the vocal reference, then hear the same score in a new voice.', reference: media(referenceFile), ours: media(oursFile, refMeta.audioOffset || 0), score, baselines, midiUrl: url(path.join(oursDir, 'melody.mid')) });
+      references.push({ id: refId, title: refMeta.title || (/^referencename\d+$/i.test(refId) ? `Reference ${references.length+1}` : refId.replace(/[-_]/g, ' ')), description: refMeta.description || '', reference: media(referenceFile), ours: media(oursFile, refMeta.audioOffset || 0), score, baselines, midiUrl: url(path.join(oursDir, 'melody.mid')) });
     }
     if (!references.length) continue;
-    songs.push({ id, title: meta.title || (/^songname\d+$/i.test(id) ? references[0].score.lines[0]?.text || `Song ${songs.length+1}` : id.replace(/[-_]/g, ' ')), subtitle: meta.subtitle || 'A song, reinterpreted', description: meta.description || '', source: media(source || mix, meta.sourceOffset || 0), mix: media(mix, meta.mixOffset || 0), lyrics: fs.existsSync(path.join(dir, 'gt_lyrics.txt')) ? fs.readFileSync(path.join(dir,'gt_lyrics.txt'),'utf8').trim() : '', references });
+    songs.push({ id, title: meta.title || (/^songname\d+$/i.test(id) ? references[0].score.lines[0]?.text || `Song ${songs.length+1}` : id.replace(/[-_]/g, ' ')), subtitle: meta.subtitle || '', description: meta.description || '', source: media(source || mix, meta.sourceOffset || 0), mix: media(mix, meta.mixOffset || 0), lyrics: fs.existsSync(path.join(dir, 'gt_lyrics.txt')) ? fs.readFileSync(path.join(dir,'gt_lyrics.txt'),'utf8').trim() : '', references });
   }
   const applications = [];
   for (const id of subdirs(applicationsDir)) {
@@ -114,7 +114,7 @@ export function buildLibrary(demoDir, applicationsDir) {
     if (!meta) continue;
     const before=audioIn(dir,'before'),after=audioIn(dir,'after');
     if (!before || !after) continue;
-    applications.push({ id, title:meta.title||id, type:meta.type||'Creative edit', description:meta.description||'', prompt:meta.prompt||'', beforeText:meta.beforeText||'', afterText:meta.afterText||'', before:media(before),after:media(after), reference:media(audioIn(dir,'reference')) });
+    applications.push({ id, title:meta.title||id, type:meta.type||'Score editing', description:meta.description||'', prompt:meta.prompt||'', beforeText:meta.beforeText||'', afterText:meta.afterText||'', before:media(before),after:media(after), reference:media(audioIn(dir,'reference')) });
   }
   return { version: 1, songs, applications };
 }
