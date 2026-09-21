@@ -22,6 +22,21 @@ The build creates `dist/`. You can **double-click `dist/index.html`** without st
 
 ## Replace the collection
 
+The current collection contains **8 songs × 4 reference voices (32 S³ outputs)**. Song titles are English translations used for display:
+
+| Song ID | Display title |
+| --- | --- |
+| `blue-lotus` | Blue Lotus |
+| `chasing-dreams-with-a-pure-heart` | Chasing Dreams with a Pure Heart |
+| `fairy-tale` | Fairy Tale |
+| `later` | Later |
+| `tears-of-a-fox` | Tears of a Fox |
+| `ten-miles-of-spring-breeze` | Ten Miles of Spring Breeze |
+| `the-whale-that-became-an-island` | The Whale That Became an Island |
+| `those-years` | Those Years |
+
+Every song uses the same four reference IDs, in display order: `01-male-singer-1` (Male Singer 1 (Chinese Opera Style)), `02-child` (Child Voice), `03-female-singer` (Female Singer), and `04-male-singer-2` (Male Singer 2). Public paths and metadata use these anonymous labels. Each reference folder includes a byte-identical copy of its reference audio; the four outputs for a song share the same transcription files. Supplied WAV and MP3 audio is retained without re-encoding. Songs without a complete set of generated outputs are not included in this collection.
+
 Replace the repository's **`demo/`** directory with your new results, keeping this structure. Run `npm run build` locally, or push to `main` to rebuild and deploy automatically on GitHub Pages. The site discovers all song/reference directories; no manually maintained list is needed.
 
 ```text
