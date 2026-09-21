@@ -35,7 +35,7 @@ The current collection contains **8 songs × 4 reference voices (32 S³ outputs)
 | `the-whale-that-became-an-island` | The Whale That Became an Island |
 | `those-years` | Those Years |
 
-Every song uses the same four reference IDs, in display order: `01-male-singer-1` (Male Singer 1 (Chinese Opera Style)), `02-child` (Child Voice), `03-female-singer` (Female Singer), and `04-male-singer-2` (Male Singer 2). Public paths and metadata use these anonymous labels. Each reference folder includes a byte-identical copy of its reference audio; the four outputs for a song share the same transcription files. Supplied WAV and MP3 audio is retained without re-encoding. Songs without a complete set of generated outputs are not included in this collection.
+Every song displays the references in this order: Female Singer, Child Voice, Male Singer 1 (Opera), and Male Singer 2. The optional numeric `order` field in each reference's `meta.json` controls display order (lower values first); references without it retain folder order after explicitly ordered references. Existing reference IDs and share links remain unchanged. Public paths and metadata use anonymous labels. Each reference folder includes a byte-identical copy of its reference audio; the four outputs for a song share the same transcription files. Supplied WAV and MP3 audio is retained without re-encoding. Songs without a complete set of generated outputs are not included in this collection.
 
 Replace the repository's **`demo/`** directory with your new results, keeping this structure. Run `npm run build` locally, or push to `main` to rebuild and deploy automatically on GitHub Pages. The site discovers all song/reference directories; no manually maintained list is needed.
 

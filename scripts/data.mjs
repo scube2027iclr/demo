@@ -106,6 +106,8 @@ export function buildLibrary(demoDir, applicationsDir) {
       references.push({ id: refId, title: refMeta.title || (/^referencename\d+$/i.test(refId) ? `Reference ${references.length+1}` : refId.replace(/[-_]/g, ' ')), description: refMeta.description || '', reference: media(referenceFile), ours: media(oursFile, refMeta.audioOffset || 0), score, baselines, midiUrl: url(path.join(oursDir, 'melody.mid')) });
     }
     if (!references.length) continue;
+    const displayOrder = new Map(references.map(ref => [ref.id, readJSON(path.join(dir, ref.id, 'meta.json'), {}).order]));
+    references.sort((a, b) => (Number.isFinite(displayOrder.get(a.id)) ? displayOrder.get(a.id) : Infinity) - (Number.isFinite(displayOrder.get(b.id)) ? displayOrder.get(b.id) : Infinity));
     songs.push({ id, title: meta.title || (/^songname\d+$/i.test(id) ? references[0].score.lines[0]?.text || `Song ${songs.length+1}` : id.replace(/[-_]/g, ' ')), subtitle: meta.subtitle || '', description: meta.description || '', source: media(source || mix, meta.sourceOffset || 0), mix: media(mix, meta.mixOffset || 0), lyrics: fs.existsSync(path.join(dir, 'gt_lyrics.txt')) ? fs.readFileSync(path.join(dir,'gt_lyrics.txt'),'utf8').trim() : '', references });
   }
   const applications = [];
