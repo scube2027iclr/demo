@@ -124,6 +124,13 @@
     container.innerHTML=data.applications.map((c,i)=>`<article class="application-card"><span class="index-label">${String(i+1).padStart(2,'0')} / ${esc(c.type)}</span><h2>${esc(c.title)}</h2><p>${esc(c.description)}</p>${c.prompt?`<blockquote>${esc(c.prompt)}</blockquote>`:''}<div class="edit-pair">${['before','after'].map(which=>`<div class="edit-version"><span class="eyebrow">${which==='before'?'ORIGINAL':'EDITED'}</span><p>${esc(c[which+'Text'])}</p><button data-app="${i}" data-version="${which}" data-label="Listen to ${which==='before'?'original':'edit'}" aria-pressed="false">${icon('play')}Listen to ${which==='before'?'original':'edit'}</button></div>`).join('')}</div>${c.reference?`<button class="text-button" data-app="${i}" data-version="reference" data-label="Listen to reference" style="margin-top:16px">${icon('play')}Listen to reference</button>`:''}</article>`).join('');container.querySelectorAll('[data-app]').forEach(b=>b.addEventListener('click',()=>playAux(data.applications[+b.dataset.app][b.dataset.version],b)));
   }
   renderApplications();
-  if(data.songs.length){$('song-select').innerHTML=data.songs.map((s,i)=>`<option value="${esc(s.id)}">${String(i+1).padStart(2,'0')} / ${esc(s.title)}</option>`).join('');const initial=hashState();const id=initial.params.get('song')||data.songs[Math.floor(Math.random()*data.songs.length)].id;selectSong(id,initial.params.get('ref'));showTab(initial.tab);}
+  if(data.songs.length){
+    $('song-select').innerHTML=data.songs.map((s,i)=>`<option value="${esc(s.id)}">${String(i+1).padStart(2,'0')} / ${esc(s.title)}</option>`).join('');
+    const initial=hashState();
+    const featuredSong=data.songs.find(s=>s.id==='tears-of-a-fox')||data.songs[0];
+    const id=initial.params.get('song')||featuredSong.id;
+    const refId=initial.params.get('ref')||(id==='tears-of-a-fox'?'01-male-singer-1':null);
+    selectSong(id,refId);showTab(initial.tab);
+  }
   else{$('workspace').innerHTML='<div class="no-data"><p>No audio examples have been added yet.</p></div>';showTab(hashState().tab);}
 })();
