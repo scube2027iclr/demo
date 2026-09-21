@@ -97,7 +97,8 @@
     if(data.songs.length===1&&song.references.length===1){toast('Only one example is available.');return;}
     shuffled=shuffled.filter(id=>id!==song.id);
     if(!shuffled.length)shuffled=data.songs.map(s=>s.id).filter(id=>id!==song.id).sort(()=>Math.random()-.5);
-    const nextSong=data.songs.find(s=>s.id===shuffled.pop())||song;
+    const nextSongId=shuffled.pop();
+    const nextSong=data.songs.find(s=>s.id===nextSongId)||song;
     const candidates=nextSong.references.filter(r=>nextSong.id!==song.id||r.id!==reference.id);
     const nextReference=candidates[Math.floor(Math.random()*candidates.length)];
     selectSong(nextSong.id,nextReference.id);
