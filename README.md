@@ -116,6 +116,9 @@ The build validates the note/flag/pronunciation counts, group structure, lyric-g
 
 ## Listening controls
 
+The conversion demo is organized as one example panel: **01 Choose an example → 02 SVC output → 03 Transcription output**. Source song and target reference selectors are grouped at the top. The current-example strip stays visible while scrolling through that panel; audio, baselines, piano roll, and lyrics all belong to that selection. Baselines sit directly below the main audio player. The interface uses grayscale, with copper reserved for melisma annotations.
+
+
 - Source vocals, original mix, and S³ output share score time when switching.
 - The reference has a separate player. Starting it pauses the main performance; starting the main performance or a baseline stops other players.
 - MIDI overlay is off by default. It uses a lightweight local Web Audio synthesizer with its own volume. MIDI-only playback is also available; this is a note preview, not generated singing or a sampled piano.

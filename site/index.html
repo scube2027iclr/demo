@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Audio examples for S³: Unified Zero-Shot Singing Synthesis and Conversion via Joint Lyrics–Melody Transcription.">
-  <meta name="theme-color" content="#f7f7f2">
+  <meta name="theme-color" content="#f6f6f6">
   <title>S³: Unified Zero-Shot Singing Synthesis and Conversion via Joint Lyrics–Melody Transcription</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
@@ -15,27 +15,49 @@
   <a class="skip-link" href="#workspace">Skip to audio examples</a>
   <header class="site-header wrap">
     <a class="brand" href="#svc" aria-label="S cubed, home"><span class="brand-mark">S<sup>3</sup></span><span class="brand-caption">AUDIO EXAMPLES</span></a>
-    <nav class="top-nav" aria-label="Main navigation"><button data-tab="svc" class="nav-tab active" aria-current="page">Singing conversion</button><button data-tab="applications" class="nav-tab">Applications <span class="nav-arrow">↗</span></button></nav>
+    <nav class="top-nav" aria-label="Main navigation"><button data-tab="svc" class="nav-tab active" aria-current="page">Singing conversion</button><button data-tab="applications" class="nav-tab">Editing applications</button></nav>
     <span class="header-note">Anonymous submission · ICLR 2027</span>
   </header>
 
   <main id="svc-page" class="wrap">
     <section class="hero paper-hero" aria-labelledby="hero-title">
+      <p class="paper-kicker">S³ / AUDIO EXAMPLES / ICLR 2027</p>
       <h1 id="hero-title">S³: Unified Zero-Shot Singing Synthesis and Conversion via <em>Joint Lyrics–Melody Transcription</em></h1>
       <p class="hero-description">S³ transcribes source audio with supplied lyrics into a symbolic score, then generates singing conditioned on a reference recording.</p>
-      <div class="usage-guide" aria-label="How to use this demo"><h2>How to use</h2><ol><li><strong>Listen.</strong> Select a song and reference. Compare the S³ output with the source vocals or original mix.</li><li><strong>Inspect.</strong> Use the piano roll to view predicted notes and lyrics. Copper notes connected by a curve share one syllable (melisma).</li><li><strong>Navigate.</strong> Click a lyric to seek or a timestamp to play a phrase. Enable MIDI overlay to hear the predicted notes alongside the audio.</li></ol></div>
     </section>
 
-    <section id="workspace" class="listening-room" aria-label="Interactive singing conversion demo">
-      <div class="room-heading"><div class="section-heading"><span class="index-label">SINGING CONVERSION</span><h2 id="song-title">Loading examples…</h2><p id="song-subtitle"></p></div><div class="song-actions"><label class="select-wrap"><span class="sr-only">Choose a song</span><select id="song-select" aria-label="Choose a song"></select></label><button id="shuffle" class="btn btn-outline"><span data-icon="shuffle"></span> Random song</button><button id="share" class="icon-button" aria-label="Copy a link to this song and reference" title="Copy case link"><span data-icon="link"></span></button></div></div>
+    <section id="workspace" class="listening-room" aria-labelledby="demo-title">
+      <header class="room-heading">
+        <div><h2 id="demo-title">Singing voice conversion (SVC)</h2><p class="room-description">Choose a source song and a target voice, then play S³ and compare it with the source or other systems.</p></div>
+      </header>
 
-      <div class="studio">
-        <aside class="reference-panel" aria-label="Reference performance"><div class="label-row"><span class="eyebrow">SINGER REFERENCE</span><span id="reference-count" class="soft-number"></span></div><div id="reference-list" class="reference-list"></div><div class="reference-player"><div class="reference-art" aria-hidden="true"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit orbit-three"></span><span class="orbit-core"></span></div><button id="reference-play" class="reference-play"><span class="round-play" data-icon="play"></span><span><strong>Listen to reference</strong><small id="reference-time">Original reference audio</small></span></button><input id="reference-seek" class="thin-range" type="range" min="0" max="100" value="0" step="0.01" aria-label="Seek reference audio"></div><p id="reference-description" class="reference-description"></p></aside>
+      <section class="case-selection" aria-labelledby="selection-title">
+        <div class="step-heading selection-heading"><span class="step-number">01</span><h3 id="selection-title">Choose an example</h3><button id="share" class="btn btn-outline" aria-label="Copy a link to this song and reference"><span data-icon="link"></span> Copy example link</button></div>
+        <div class="selection-grid">
+          <div class="song-field"><label class="field-label" for="song-select">Source song</label><p class="field-help">The song to convert</p><div class="song-actions"><select id="song-select" aria-label="Choose a song"></select><button id="shuffle" class="icon-button" aria-label="Choose a random song" title="Random song"><span data-icon="shuffle"></span></button></div><p id="song-subtitle" class="field-help"></p></div>
+          <div class="reference-field">
+            <div class="label-row"><span id="reference-label" class="field-label">Target voice / reference</span><span id="reference-count" class="soft-number"></span></div>
+            <p class="field-help">The recording that guides the generated voice</p>
+            <div class="reference-card">
+              <div id="reference-list" class="reference-list" role="group" aria-labelledby="reference-label"></div>
+              <p id="reference-description" class="reference-description"></p>
+              <div class="reference-player"><button id="reference-play" class="reference-play" aria-pressed="false"><span class="round-play" data-icon="play"></span><span><strong id="reference-play-label">Listen to reference</strong><small id="reference-time">Original reference audio</small></span></button><input id="reference-seek" class="thin-range" type="range" min="0" max="100" value="0" step="0.01" aria-label="Seek reference audio"></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <div class="performance-panel"><div class="performance-top"><div><span class="eyebrow">AUDIO COMPARISON</span><div class="mode-switch" role="group" aria-label="Playback source"><button data-mode="ours" class="selected">S³ <span>Generated</span></button><button data-mode="source">Source <span>Vocals</span></button><button data-mode="mix">Original <span>Mix</span></button></div></div><div class="score-badge"><span class="status-dot"></span> Predicted symbolic score</div></div>
+      <div class="case-context" role="status" aria-live="polite" aria-atomic="true"><span class="eyebrow">CURRENT EXAMPLE</span><span class="case-names"><strong id="song-title">Loading examples…</strong><span class="context-arrow" aria-hidden="true">→</span><strong id="selected-reference"></strong></span><span class="context-note">Audio, baselines &amp; score below</span></div>
 
+      <section class="listen-section" aria-labelledby="listen-title">
+        <div class="step-heading"><span class="step-number">02</span><div><h3 id="listen-title">SVC output</h3><p>The audio below is generated by S³ for the selected song and reference. You can switch to the source vocals or original mix at the same playback position.</p></div></div>
+        <div class="performance-top"><div class="mode-switch" role="group" aria-label="Playback source"><button data-mode="ours" class="selected" aria-pressed="true">S³ <span>Converted voice</span></button><button data-mode="source" aria-pressed="false">Source <span>Original vocals</span></button><button data-mode="mix" aria-pressed="false">Original <span>Full mix</span></button></div><span class="keyboard-hint"><kbd>space</kbd> play / pause</span></div>
           <div class="transport"><button id="main-play" class="play-main" aria-label="Play performance"><span data-icon="play"></span></button><div class="transport-body"><div class="track-caption"><span id="track-name">S³ · Generated performance</span><span class="time-code"><span id="current-time">0:00</span><span class="slash"> / </span><span id="duration">0:00</span></span></div><div class="waveform-wrap"><canvas id="waveform" aria-hidden="true"></canvas><input id="seek" type="range" value="0" min="0" max="34" step="0.01" aria-label="Seek performance"></div></div><button id="restart" class="icon-button" aria-label="Restart performance" title="Restart"><span data-icon="restart"></span></button></div>
+        <section class="comparison-section" aria-labelledby="comparison-title"><div class="section-topline"><h4 id="comparison-title">Baselines</h4><p>Same selected song and reference</p></div><div id="baselines" class="baseline-grid"></div></section>
+      </section>
 
+      <section class="inspection-section" aria-labelledby="inspection-title">
+        <div class="step-heading"><span class="step-number">03</span><div><h3 id="inspection-title">Transcription output</h3><p>The piano roll and lyrics below show the predicted transcription. Click a note or syllable to seek to its position in the audio.</p></div><button id="inspection-play" class="btn btn-outline" aria-label="Play performance"><span data-icon="play"></span><span>Play audio</span></button></div>
           <div class="score-toolbar"><div class="score-tabs"><span class="score-tab active"><span data-icon="piano"></span> Piano roll</span></div><div class="score-controls"><label class="check-control"><input id="pinyin" type="checkbox" checked><span>Pronunciation</span></label><button id="zoom-out" class="icon-button small" aria-label="Zoom out" title="Zoom out"><span data-icon="minus"></span></button><span id="zoom-label" class="zoom-label">12s</span><button id="zoom-in" class="icon-button small" aria-label="Zoom in" title="Zoom in"><span data-icon="plus"></span></button></div></div>
 
           <div class="piano-surface"><canvas id="piano-roll" tabindex="0" role="img" aria-label="Interactive piano roll. Notes sharing a syllable are connected. Use lyric buttons below to select groups; left and right arrows move through notes."></canvas><div id="note-tooltip" class="note-tooltip" hidden></div></div>
@@ -43,13 +65,9 @@
           <div class="overview-wrap"><canvas id="overview" aria-hidden="true"></canvas><input id="pan" type="range" min="0" max="22" value="0" step="0.05" aria-label="Pan the piano roll"></div>
 
           <div class="playback-tools"><div class="midi-controls"><button id="midi-toggle" class="switch-button" role="switch" aria-checked="false"><span class="switch-track"></span> MIDI overlay</button><input id="midi-volume" type="range" min="0" max="0.6" step="0.01" value="0.18" aria-label="MIDI overlay volume" title="MIDI volume"><button id="midi-only" class="text-button" aria-pressed="false">MIDI only</button></div><div class="secondary-tools"><button id="loop" class="text-button" aria-pressed="false"><span data-icon="repeat"></span><span>Loop phrase</span></button><button id="follow" class="text-button on" aria-pressed="true"><span data-icon="follow"></span> Auto-scroll</button></div></div>
-        </div>
-      </div>
-
       <div class="lyrics-section"><div class="lyrics-heading"><div><h3>Note–lyric alignment</h3></div><p>Click a syllable to seek; a timestamp to play.<br><span class="copper-text">Underlines mark melisma.</span></p></div><div id="lyric-lines" class="lyric-lines"></div><div class="score-disclaimer"><span data-icon="info"></span> Timing follows the predicted score; sung timing may differ.<a id="midi-download" download>Download MIDI <span>↗</span></a></div></div>
+      </section>
     </section>
-
-    <section class="comparison-section" aria-labelledby="comparison-title"><div class="section-topline"><div><h2 id="comparison-title">Baseline comparison</h2></div><p>All systems use the same source and reference.</p></div><div id="baselines" class="baseline-grid"></div></section>
   </main>
 
   <main id="applications-page" class="wrap" hidden><section class="hero applications-hero"><div><h1>Lyric and melody editing</h1><p class="hero-description">Compare singing generated from the original and edited symbolic scores.</p></div></section><section id="application-cases" class="application-cases" aria-label="Score editing examples"></section></main>
