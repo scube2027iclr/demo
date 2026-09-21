@@ -140,7 +140,7 @@ The conversion demo is organized as one example panel: **01 Choose an example â†
 - Click a lyric syllable or note to select its full note group and seek. Click a phrase timestamp to play that phrase; **Loop phrase** repeats it.
 - Pronunciation labels can be hidden. Zoom, pan, follow mode, and the overview support inspecting individual notes or the whole excerpt.
 - Space toggles playback when the page/piano roll has focus. Left/right on the piano roll select adjacent lyric groups. Every lyric group also has a keyboard-accessible button.
-- Copy a case link to preserve the selected song and reference. Random selection never starts audio without a click.
+- Copy a case link to preserve the selected song and reference. The random button selects both a song and a reference, without starting playback.
 - Score notation is intentionally pending beat/quantization metadata. No notation or alignment data is invented.
 
 ## Applications

@@ -93,7 +93,15 @@
   $('reference-play').addEventListener('click',async()=>{if(!refAudio.paused){stopReference();return;}pause();stopAux();try{await refAudio.play();$('reference-play').querySelector('.round-play').innerHTML=icon('pause');$('reference-play').setAttribute('aria-pressed','true');$('reference-play-label').textContent='Pause reference';}catch{toast('Reference audio could not be played.');}});
   $('reference-seek').addEventListener('input',e=>{if(Number.isFinite(refAudio.duration))refAudio.currentTime=+e.target.value/100*refAudio.duration;});
   $('song-select').addEventListener('change',e=>selectSong(e.target.value));
-  $('shuffle').addEventListener('click',()=>{if(data.songs.length<2){toast('Only one song is available.');return;}if(!shuffled.length)shuffled=data.songs.map(s=>s.id).filter(id=>id!==song.id).sort(()=>Math.random()-.5);selectSong(shuffled.pop());});
+  $('shuffle').addEventListener('click',()=>{
+    if(data.songs.length===1&&song.references.length===1){toast('Only one example is available.');return;}
+    shuffled=shuffled.filter(id=>id!==song.id);
+    if(!shuffled.length)shuffled=data.songs.map(s=>s.id).filter(id=>id!==song.id).sort(()=>Math.random()-.5);
+    const nextSong=data.songs.find(s=>s.id===shuffled.pop())||song;
+    const candidates=nextSong.references.filter(r=>nextSong.id!==song.id||r.id!==reference.id);
+    const nextReference=candidates[Math.floor(Math.random()*candidates.length)];
+    selectSong(nextSong.id,nextReference.id);
+  });
   $('share').addEventListener('click',async()=>{setHash();try{await navigator.clipboard.writeText(location.href);toast('Case link copied.');}catch{const input=document.createElement('textarea');input.value=location.href;document.body.append(input);input.select();const copied=document.execCommand('copy');input.remove();toast(copied?'Case link copied.':'Copy the address bar to share this case.');}});
   $('midi-toggle').addEventListener('click',async()=>{try{await ensureSynth();overlay=!overlay;$('midi-toggle').setAttribute('aria-checked',String(overlay));flushMidi();scheduleMidi();}catch(e){toast(e.message);}});
   $('midi-only').addEventListener('click',async()=>{const resume=playing;pause();midiOnly=!midiOnly;audio.muted=midiOnly;$('midi-only').setAttribute('aria-pressed',String(midiOnly));loadMain();drawAll();if(resume)play();});
