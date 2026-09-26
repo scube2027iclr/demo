@@ -14,18 +14,16 @@
   const timeLabel = t => `${Math.floor(Math.max(0,t)/60)}:${String(Math.floor(Math.max(0,t)%60)).padStart(2,'0')}`;
   const pitchName = p => ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'][p%12]+(Math.floor(p/12)-1);
   const clamp = (n,a,b) => Math.min(b,Math.max(a,n));
-  const data=window.S3_DATA||{songs:[],applications:[]}, audio=$('main-audio'), refAudio=$('reference-audio'), aux=$('aux-audio');
+  const data=window.S3_DATA||{songs:[]}, audio=$('main-audio'), refAudio=$('reference-audio'), aux=$('aux-audio');
   let song,reference,score,mode='ours',position=0,playing=false,midiOnly=false,overlay=false,follow=true,windowSeconds=8,viewStart=0,selectedGroup=-1,activeGroup=-2,loopRange=null,showPinyin=true;
   let clockStart=0,clockOffset=0,playVersion=0,toastTimer,auxButton=null,animation=0,audioContext,midiGain;
   let hitNotes=[],canvasWidth=0,canvasHeight=0,shuffled=[],voices=new Map(),scheduled=new Set();
   const duration=()=>score?.duration||0;
   const currentMedia=()=>mode==='source'?song?.source:mode==='mix'?song?.mix:reference?.ours;
   function toast(message){$('toast').textContent=message;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),3500);}
-  function hashState(){const hash=location.hash.slice(1),[tab,query]=hash.split('?');return {tab:tab==='applications'?'applications':'svc',params:new URLSearchParams(query||'')};}
-  function setHash(tab=hashState().tab){const params=new URLSearchParams();if(song){params.set('song',song.id);params.set('ref',reference.id);}const next=`#${tab}${params.size?'?'+params:''}`;try{history.replaceState(null,'',next);}catch{location.hash=next;}}
-  function showTab(tab){pause();stopReference();stopAux();$('svc-page').hidden=tab!=='svc';$('applications-page').hidden=tab!=='applications';document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);if(b.dataset.tab===tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});setHash(tab);if(tab==='svc')requestAnimationFrame(drawAll);}
-  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
-  window.addEventListener('hashchange',()=>{const h=hashState();const s=data.songs.find(s=>s.id===h.params.get('song'));if(s&&(s.id!==song?.id||h.params.get('ref')!==reference?.id))selectSong(s.id,h.params.get('ref'));showTab(h.tab);});
+  function hashState(){const query=location.hash.split('?')[1];return {params:new URLSearchParams(query||'')};}
+  function setHash(){const params=new URLSearchParams();if(song){params.set('song',song.id);params.set('ref',reference.id);}const next=`#svc${params.size?'?'+params:''}`;try{history.replaceState(null,'',next);}catch{location.hash=next;}}
+  window.addEventListener('hashchange',()=>{const h=hashState();const s=data.songs.find(s=>s.id===h.params.get('song'));if(s&&(s.id!==song?.id||h.params.get('ref')!==reference?.id))selectSong(s.id,h.params.get('ref'));setHash();});
 
   function resetAuxButton(){if(auxButton){auxButton.innerHTML=icon('play')+esc(auxButton.dataset.label||'Listen');auxButton.setAttribute('aria-pressed','false');auxButton=null;}}
   function stopAux(){aux.pause();resetAuxButton();}
@@ -63,7 +61,7 @@
   }
   function phraseRange(group){const same=score.groups.filter(g=>g.line===group.line);return[same[0].start,same.at(-1).end];}
   function selectGroup(id){selectedGroup=id;const g=score.groups[id];if(loopRange)loopRange=phraseRange(g);seek(g.start,true);activeGroup=-2;drawAll();}
-  function renderBaselines(){const list=reference.baselines;if(!list.length){$('baselines').innerHTML=`<div class="empty-comparison">${icon('headphones')}<div><p>No baseline audio has been added for this case.</p></div></div>`;return;}$('baselines').innerHTML=list.map((b,i)=>`<article class="baseline-card"><span class="system-number">SYSTEM ${String(i+1).padStart(2,'0')}</span><h3>${esc(b.name)}</h3><p>${esc(b.description||'Same source & reference')}</p><button data-baseline="${i}" data-label="Listen" aria-pressed="false">${icon('play')}Listen</button></article>`).join('');$('baselines').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>playAux(list[+b.dataset.baseline].audio,b)));}
+  function renderBaselines(){const list=reference.baselines;if(!list.length){$('baselines').innerHTML=`<div class="empty-comparison">${icon('headphones')}<div><p>No baseline audio has been added for this case.</p></div></div>`;return;}$('baselines').innerHTML=list.map((b,i)=>`<article class="baseline-card"><span class="system-number">SYSTEM ${String(i+1).padStart(2,'0')}</span><h3>${esc(b.name)}</h3><button data-baseline="${i}" data-label="Listen" aria-pressed="false">${icon('play')}Listen</button></article>`).join('');$('baselines').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>playAux(list[+b.dataset.baseline].audio,b)));}
 
   // Use logical 16px-root coordinates so canvas labels scale with the rem-based UI.
   const uiScale=()=>parseFloat(getComputedStyle(document.documentElement).fontSize)/16;
@@ -120,17 +118,13 @@
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)pause();});
   new ResizeObserver(()=>drawAll()).observe($('workspace'));
 
-  function renderApplications(){const container=$('application-cases');if(!data.applications.length){container.innerHTML=`<div class="application-empty"><p>No editing examples have been added yet.</p></div>`;return;}
-    container.innerHTML=data.applications.map((c,i)=>`<article class="application-card"><span class="index-label">${String(i+1).padStart(2,'0')} / ${esc(c.type)}</span><h2>${esc(c.title)}</h2><p>${esc(c.description)}</p>${c.prompt?`<blockquote>${esc(c.prompt)}</blockquote>`:''}<div class="edit-pair">${['before','after'].map(which=>`<div class="edit-version"><span class="eyebrow">${which==='before'?'ORIGINAL':'EDITED'}</span><p>${esc(c[which+'Text'])}</p><button data-app="${i}" data-version="${which}" data-label="Listen to ${which==='before'?'original':'edit'}" aria-pressed="false">${icon('play')}Listen to ${which==='before'?'original':'edit'}</button></div>`).join('')}</div>${c.reference?`<button class="text-button" data-app="${i}" data-version="reference" data-label="Listen to reference" style="margin-top:16px">${icon('play')}Listen to reference</button>`:''}</article>`).join('');container.querySelectorAll('[data-app]').forEach(b=>b.addEventListener('click',()=>playAux(data.applications[+b.dataset.app][b.dataset.version],b)));
-  }
-  renderApplications();
   if(data.songs.length){
     $('song-select').innerHTML=data.songs.map((s,i)=>`<option value="${esc(s.id)}">${String(i+1).padStart(2,'0')} / ${esc(s.title)}</option>`).join('');
     const initial=hashState();
     const featuredSong=data.songs.find(s=>s.id==='tears-of-a-fox')||data.songs[0];
     const id=initial.params.get('song')||featuredSong.id;
     const refId=initial.params.get('ref')||(id==='tears-of-a-fox'?'01-male-singer-1':null);
-    selectSong(id,refId);showTab(initial.tab);
+    selectSong(id,refId);
   }
-  else{$('workspace').innerHTML='<div class="no-data"><p>No audio examples have been added yet.</p></div>';showTab(hashState().tab);}
+  else{$('workspace').innerHTML='<div class="no-data"><p>No audio examples have been added yet.</p></div>';setHash();}
 })();

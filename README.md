@@ -1,6 +1,6 @@
 # S³ — Listening room
 
-An anonymous, self-contained research demo for joint lyrics–melody transcription and reference-conditioned singing. The site has **Singing conversion** and **Applications** views, synchronized audio/MIDI playback, an interactive piano roll, lyric assignments, and melisma visualization.
+An anonymous, self-contained research demo for joint lyrics–melody transcription and reference-conditioned singing. The site presents **Singing conversion** examples with baseline comparisons, synchronized audio/MIDI playback, an interactive piano roll, lyric assignments, and melisma visualization.
 
 ## Preview
 
@@ -36,6 +36,10 @@ The current collection contains **8 songs × 4 reference voices (32 S³ outputs)
 | `those-years` | Those Years |
 
 Every song displays the references in this order: Female Singer, Child Voice, Male Singer 1 (Opera), and Male Singer 2. The optional numeric `order` field in each reference's `meta.json` controls display order (lower values first); references without it retain folder order after explicitly ordered references. Existing reference IDs and share links remain unchanged. Public paths and metadata use anonymous labels. Each reference folder includes a byte-identical copy of its reference audio; the four outputs for a song share the same transcription files. Supplied WAV and MP3 audio is retained without re-encoding. Songs without a complete set of generated outputs are not included in this collection.
+
+Each of the 32 cases also includes four baselines: **`soulx-melody`** (melody conditioning with ground-truth lyric timing), **`soulx-svc`** (singing voice conversion), **Vevo2-Style**, and **Vevo2-FM**, for **128 baseline recordings**. Their vocal WAV files are preserved without re-encoding and matched to the same source song and reference voice. Only the eight songs and four references in this collection are included. Vevo2 uses the final `style_vocals.wav` and `fm_vocals.wav` outputs, without accompaniment or intermediate segments.
+
+Vevo2-Style generation reports duration warnings for Child Voice on Chasing Dreams with a Pure Heart, Later, Ten Miles of Spring Breeze, and Those Years. These results are included unchanged; baseline recordings play independently and are not forced to match the source duration.
 
 Replace the repository's **`demo/`** directory with your new results, keeping this structure. Run `npm run build` locally, or push to `main` to rebuild and deploy automatically on GitHub Pages. The site discovers all song/reference directories; no manually maintained list is needed.
 
@@ -144,31 +148,7 @@ The conversion demo is organized as one example panel: **01 Choose an example �
 - Copy a case link to preserve the selected song and reference. The random button selects both a song and a reference, without starting playback.
 - Score notation is intentionally pending beat/quantization metadata. No notation or alignment data is invented.
 
-## Applications
-
-Optional examples are discovered under **`applications/`**, separate from the SVC collection:
-
-```text
-applications/
-  lyric-edit-01/
-    meta.json
-    before.mp3
-    after.mp3
-    reference.mp3              # optional
-```
-
-```json
-{
-  "title": "A new verse",
-  "type": "Lyric editing",
-  "description": "Lyrics edited with GPT-6; singing generated with S³.",
-  "prompt": "The actual editing instruction.",
-  "beforeText": "Original lyrics or a description of the original melody",
-  "afterText": "Edited lyrics or a description of the actual musical changes"
-}
-```
-
-Only complete examples with both audio files are shown. When there are no examples, the site labels the section as upcoming; it does not present synthetic placeholders as experimental results. Baselines behave similarly.
+The public interface contains only the SVC demo, with no tab navigation. Baseline cards show the system name and playback button without descriptions. The data builder retains support for application examples, but the frontend does not display them.
 
 ## GitHub Pages
 
