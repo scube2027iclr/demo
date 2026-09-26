@@ -20,13 +20,15 @@ npm run build
 
 The build creates `dist/`. You can **double-click `dist/index.html`** without starting a server.
 
-To create the complete offline supplement (requires Python 3.9+ in addition to Node.js):
+To create the complete offline supplement (requires Python 3.9+ and FFmpeg with `libmp3lame`, in addition to Node.js):
 
 ```sh
 npm run package
 ```
 
-This rebuilds the demo and writes **`release/s3-demo-supplement.zip`**, along with a SHA-256 checksum file. The ZIP contains the page, all demo audio, MIDI, lyrics, bundled fonts and licenses, and a reviewer-facing `README.txt`. Audio is preserved without re-encoding. The package excludes Git history, dependencies, and this developer README. It validates media paths and ZIP integrity before finishing; generated archives are not committed to Git.
+This rebuilds the demo and writes **`release/s3-demo-supplement.zip`**, along with a SHA-256 checksum file. The ZIP contains the page, all demo audio, MIDI, lyrics, bundled fonts and licenses, and a reviewer-facing `README.txt`. Only the supplement uses **192 kbps MP3** copies of WAV and other non-MP3 audio; existing MP3 files are copied without re-encoding. The repository and online build retain the original audio. Encoded copies are cached under `release/.mp3-cache/` for subsequent runs. The package excludes Git history, dependencies, and this developer README. It validates media paths and ZIP integrity before finishing; generated archives are not committed to Git.
+
+To package the original audio instead (no FFmpeg required), run `npm run package:original`; this writes `release/s3-demo-supplement-original.zip`.
 
 Reviewers should extract the whole ZIP, then open `s3-demo/index.html`. If their browser restricts local-file playback, they can run `python3 -m http.server 8000 --bind 127.0.0.1` from the extracted `s3-demo` directory and visit `http://127.0.0.1:8000/`. The supplement works without internet access.
 
